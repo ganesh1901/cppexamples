@@ -1,0 +1,23 @@
+Thread-Local Storage
+
+Thread-local storage (TLS) is a mechanism by which variables are allocated such that there is one instance of the variable per extant thread. The run-time model GCC uses to implement this originates in the IA-64 processor-specific ABI, but has since been migrated to other processors as well. It requires significant support from the linker (ld), dynamic linker (ld.so), and system libraries (libc.so and libpthread.so), so it is not available everywhere.
+
+At the user level, the extension is visible with a new storage class keyword: __thread. For example:
+
+     __thread int i;
+     extern __thread struct state s;
+     static __thread char *p;
+     
+
+The __thread specifier may be used alone, with the extern or static specifiers, but with no other storage class specifier. When used with extern or static, __thread must appear immediately after the other storage class specifier.
+
+The __thread specifier may be applied to any global, file-scoped static, function-scoped static, or static data member of a class. It may not be applied to block-scoped automatic or non-static data member.
+
+When the address-of operator is applied to a thread-local variable, it is evaluated at run-time and returns the address of the current thread's instance of that variable. An address so obtained may be used by any thread. When a thread terminates, any pointers to thread-local variables in that thread become invalid.
+
+No static initialization may refer to the address of a thread-local variable.
+
+In C++, if an initializer is present for a thread-local variable, it must be a constant-expression, as defined in 5.19.2 of the ANSI/ISO C++ standard.
+
+---------------------------------------------------------------------------------
+Here I got an error with linker when i added the "extern int errno;"  to my program 
